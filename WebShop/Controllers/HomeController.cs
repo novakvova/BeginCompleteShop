@@ -5,8 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebShop.DAL.Abstract;
+using WebShop.Healpers;
 using WebShop.Models;
+using WebShop.Models.Entities;
 using WebShop.ViewModels;
+using System.Data.Entity;
 
 namespace WebShop.Controllers
 {
@@ -27,11 +30,15 @@ namespace WebShop.Controllers
         //        return HttpContext.GetOwinContext().Get<ApplicationDbContext>();
         //    }
         //}
-        public ActionResult Index()
+        public ActionResult Index(string[] fvalues)
         {
+            int[] listFilterId = new int[0];
             //int mycount = _userService.GetCountUsers();
             //Будую дерево фільтрів
             var filtersList = GetListFilters();
+            if (fvalues != null)
+                listFilterId = fvalues.Select(v => int.Parse(v)).ToArray();
+            var listProducts = GetProductsByFilter(listFilterId, filtersList);
             ViewBag.RoleId = 0;// _userService.AddRole("Admin");
             return View(filtersList);
         }
@@ -68,27 +75,46 @@ namespace WebShop.Controllers
                                 select g.Key).ToList()
                 }).ToList();
 
-
-            //new List<FNameViewModel>();
-            //foreach (var filterName in groupNames)
-            //{
-            //    FNameViewModel fName = new FNameViewModel
-            //    {
-            //        Id = filterName.Key.Id,
-            //        Name = filterName.Key.Name
-            //    };
-
-            //    fName.Children = (from v in filterName
-            //                      group v by new FValueViewModel
-            //                      {
-            //                          Id = v.FValueId,
-            //                          Name = v.FValue
-            //                      } into g
-            //                      select g.Key).ToList();
-
-            //    listGroupFilters.Add(fName);
-            //}
+            
             return listGroupFilters;
+        }
+
+        private List<ProductViewModel> GetProductsByFilter(int[] values, List<FNameViewModel> filtersList)
+        {
+            int[] filterValueSearchList = values;
+            var query = _context
+                .Products
+                .Include(f => f.Filters)
+                .AsQueryable();
+
+            foreach (var fName in filtersList)
+            {
+                int count = 0; //Кількість співпадінь у даній групі фільрів
+                var predicate = PredicateBuilder.False<Product>();
+                foreach (var fValue in fName.Children)
+                {
+                    for (int i = 0; i < filterValueSearchList.Length; i++)
+                    {
+                        var idV = fValue.Id;
+                        if (filterValueSearchList[i] == idV)
+                        {
+                            predicate = predicate
+                                .Or(p => p.Filters
+                                    .Any(f => f.FilterValueId == idV));
+                            count++;
+                        }
+                    }
+                }
+                if (count != 0)
+                    query = query.Where(predicate);
+            }
+            var listProductSearch = query.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price
+            }).ToList();
+            return listProductSearch;
         }
 
         public ActionResult About()

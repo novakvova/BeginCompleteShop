@@ -33,6 +33,7 @@ namespace WebShop.Models.Entities
         public virtual Category Category { get; set; }
         public virtual ICollection<ProductMappingImage> ProductMappingImages { get; set; }
         public virtual ICollection<ProductDescriptionImage> ProductDescriptionImages { get; set; }
+        public virtual ICollection<Filter> Filters { get; set; }
 
     }
 }

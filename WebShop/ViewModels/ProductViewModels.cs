@@ -29,4 +29,17 @@ namespace WebShop.ViewModels
         public int CategoryId { get; set; }
         public string [] DescriptionImages { get; set; }
     }
+    public class ProductViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        //[Display(Name = "Price", ResourceType = typeof(ResStrings))]
+        public decimal Price { get; set; }
+    }
+    public class HomeViewModel
+    {
+        public List<FNameViewModel> Filters { get; set; }
+        public List<ProductViewModel> Products { get; set; }
+    }
+
 }

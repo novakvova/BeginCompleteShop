@@ -16,4 +16,5 @@ namespace WebShop.ViewModels
         public string Name { get; set; }
         public List<FValueViewModel> Children { get; set; }
     }
+
 }
