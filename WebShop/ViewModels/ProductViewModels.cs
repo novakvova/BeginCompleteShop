@@ -36,9 +36,14 @@ namespace WebShop.ViewModels
         //[Display(Name = "Price", ResourceType = typeof(ResStrings))]
         public decimal Price { get; set; }
     }
-    public class HomeViewModel
+    public class HomeFilterViewModel
     {
         public List<FNameViewModel> Filters { get; set; }
+        public int[] Check { get; set; }
+    }
+    public class HomeViewModel
+    {
+        public HomeFilterViewModel Filter { get; set; }
         public List<ProductViewModel> Products { get; set; }
     }
 

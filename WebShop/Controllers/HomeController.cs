@@ -34,13 +34,15 @@ namespace WebShop.Controllers
         {
             int[] listFilterId = new int[0];
             //int mycount = _userService.GetCountUsers();
+            HomeViewModel model = new HomeViewModel();
+            model.Filter = new HomeFilterViewModel();
             //Будую дерево фільтрів
-            var filtersList = GetListFilters();
+            model.Filter.Filters = GetListFilters();
             if (fvalues != null)
                 listFilterId = fvalues.Select(v => int.Parse(v)).ToArray();
-            var listProducts = GetProductsByFilter(listFilterId, filtersList);
-            ViewBag.RoleId = 0;// _userService.AddRole("Admin");
-            return View(filtersList);
+            model.Products = GetProductsByFilter(listFilterId, model.Filter.Filters);
+            model.Filter.Check = listFilterId;
+            return View(model);
         }
         private List<FNameViewModel> GetListFilters()
         {

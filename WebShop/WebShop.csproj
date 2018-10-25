@@ -575,6 +575,7 @@
     <Content Include="Views\FilterCategories\Index.cshtml" />
     <Content Include="Views\FilterCategories\CreateFilterName.cshtml" />
     <Content Include="Views\FilterCategories\CreateFilterValue.cshtml" />
+    <Content Include="Views\Home\_Filters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

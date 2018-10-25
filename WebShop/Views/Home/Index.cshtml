@@ -1,4 +1,4 @@
-﻿@model List<WebShop.ViewModels.FNameViewModel>
+﻿@model WebShop.ViewModels.HomeViewModel
 @{
     ViewBag.Title = "Home Page";
     string url = HttpContext.Current.Request.Url.ToString();
@@ -7,32 +7,36 @@
 
 <div class="row">
     <div class="col-md-4">
-        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
-        {
-            foreach (var name in Model)
+        @Html.Partial("_Filters", Model.Filter)
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+
+            @foreach (var p in Model.Products)
             {
-                <ul>
-                    @name.Name
-                    @foreach (var value in name.Children)
-                    {
-                        <li>
-                            <input type="checkbox" value="@value.Id" id="fvalues" name="fvalues" />
-                            @value.Name
-                        </li>
-                    }
-                </ul>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top img-responsive"
+                             src="http://www.mihanmedia.ir/userfile/736708307-580x567.jpg"
+                             alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#" class="text-dark">@p.Name</a>
+                            </h5>
+                        </div>
+                        <div class="card-footer">
+                            <div class="badge badge-danger float-right">30%</div>
+                            <div class="float-left">
+                                <a href="#" class="text-danger">@p.Price</a>
+                                <br>
+                                <small class="text-muted"><del>2000</del></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-            <input type="submit" class="form-control" value="Примінити фільтер" />
-        }
+
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
 </div>

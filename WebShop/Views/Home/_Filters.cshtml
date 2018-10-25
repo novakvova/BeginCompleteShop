@@ -1,0 +1,22 @@
+﻿@model WebShop.ViewModels.HomeFilterViewModel
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    foreach (var name in Model.Filters)
+    {
+        <ul>
+            @name.Name
+            @foreach (var value in name.Children)
+            {
+                string isCheck = (Model.Check.SingleOrDefault(v => v == value.Id) != 0) ?
+                    "checked" : "";
+                <li>
+                    <input type="checkbox" value="@value.Id" 
+                           id="fvalues" name="fvalues" @isCheck/>
+                    @value.Name
+                </li>
+            }
+        </ul>
+    }
+    <input type="submit" class="form-control" value="Примінити фільтер" />
+}
