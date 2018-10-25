@@ -1,0 +1,177 @@
+﻿@model IEnumerable<WebShop.Models.Entities.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Name, "Index", "Products", new { category = item.Name }, null)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", null, new { @class = "deleteCategory", data_id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+@*<div id="container">
+        <ul>
+            <li>
+                Root node
+                <ul>
+                    <li>Child node 1</li>
+                    <li>Child node 2</li>
+                </ul>
+            </li>
+        </ul>
+    </div>*@
+
+@*<div id="categorySimple">
+
+    </div>*@
+@*<div id="introspection_tree">
+
+    </div>*@
+
+@*<div id="using_json_2"></div>*@
+<input type="text" name="txtCategoryName" id="txtCategoryName" value="" />
+
+<a href="#" id="btnAddNode" class="btn btn-danger">Add</a>
+<div id="tree"></div>
+
+@section styles {
+    <link href="~/Content/themes/default/style.css" rel="stylesheet" />
+}
+
+
+@section scripts {
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script src="~/Scripts/jstree.js"></script>
+    
+
+    <script>
+        //$(function () {
+        //    $('#container').jstree();
+        //});
+        $(function () {
+            var parentId = null;
+            $('#tree').jstree({
+                'core': {
+                    'multiple': false,
+                    'data': {
+                        'url': function (node) {
+                            return node.id === '#' ?
+                                '/Categories/GetParentCategories' :
+                                '/Categories/GetChildrenCategories';
+                        },
+                        'data': function (node) {
+                            return { 'id': node.id };
+                        }
+                    },
+                    'check_callback': true
+                }
+            });
+            //$('#tree').on('create_node.jstree', function (e, data) {
+            //    console.log(data.node.parent);
+
+            //});
+            $('#tree').on("changed.jstree", function (e, data) {
+                parentId = data.selected[0];
+                //console.log(data);
+                console.log(parentId);
+            });
+
+            $("#btnAddNode").on("click", function () {
+                //alert();
+                var text = $("#txtCategoryName").val();
+                $.post('/Categories/CreateCategory',
+                    {
+                        'name': text,
+                        'parentId': parentId
+                    })
+                    .done(function (d) {
+                        var id = d;
+                        var parent = '#';
+                        if (parentId)
+                            parent = parentId;
+                        $('#tree').jstree()
+                            .create_node(parent, { "id": id, "text": text },
+                                "last", function () {
+                                   // alert("done");
+                                    //return false;
+                                });
+                        //data.instance.set_id(data.node, d.id);
+                    })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+
+                return false;
+            });
+
+
+        });
+    </script>
+
+    <script>
+        window.onload = function () {
+            jQueryRelease();
+            //JavaScriptRelease();
+        };
+        function jQueryRelease() {
+            $(".deleteCategory").on("click", function () {
+                var self = $(this);
+                //bootbox.alert(self.attr("data-id"));
+                bootbox.confirm({
+                    message: "Ви дійсно хочете видалити ''?",
+                    buttons: {
+                        confirm: {
+                            label: 'Да',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'Ні',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result)
+                            location.reload();
+                        console.log('Ваша відповідь ' + result);
+                    }
+                });
+
+                return false;
+            });
+        }
+        function JavaScriptRelease() {
+            var list = document.getElementsByClassName("deleteCategory");
+            for (var i = 0; i < list.length; i++) {
+                list[i].onclick = function () {
+                    var self = this;
+                    //bootbox.alert(self.dataset.id);
+                    return false;
+                };
+            }
+        }
+    </script>
+}

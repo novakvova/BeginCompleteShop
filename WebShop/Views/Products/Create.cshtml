@@ -1,0 +1,156 @@
+﻿@model WebShop.Models.Entities.Product
+
+@{
+    ViewBag.Title = "Create";
+}
+@section styles {
+    <link href="~/Content/cropper/cropper.min.css" rel="stylesheet" />
+    <link href="~/Content/cropper/main.css" rel="stylesheet" />
+    <style>
+        .plusupload {
+            cursor: pointer;
+        }
+    </style>
+
+    @Styles.Render("~/Content/froala")
+    @Styles.Render("~/Content/Accordeon")
+}
+
+
+
+
+<div class="bs-example">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-plus"></span> What is HTML?</a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                    @Html.Partial("_Create", Model)
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><span class="glyphicon glyphicon-plus"></span> What is Bootstrap?</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @Html.Partial("_AddImages")
+                </div>
+            </div>
+        </div>
+        @*<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span class="glyphicon glyphicon-plus"></span> What is CSS?</a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="https://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+    <p><strong>Note:</strong> Click on the linked heading text to expand or collapse accordion panels.</p>
+</div>
+<div id="froala-editor">
+    <p>Click on the image below to see the custom image button.</p>
+
+</div>
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+
+    @Scripts.Render("~/bundles/froala")
+
+    <script>
+        $(function () {
+            $(".html-editor-autoinit").froalaEditor({
+                toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', '|',
+                    'color', 'emoticons', 'formatUL', 'formatOL', 'align', 'outdent', 'indent', '|',
+                    'quote', 'insertHR', 'insertLink', 'insertImage', 'insertVideo', 'insertTable', 'undo', 'redo', 'clearFormatting', 'html'],
+                imageUploadURL: '/Products/UploadImageDecription',
+                imageMaxSize: 2 * 1024 * 1024,
+                paragraphFormat: {
+                    N: 'Звичайний',
+                    H2: 'H2',
+                    H3: 'H3',
+                    H4: 'H4',
+                    H5: 'H5',
+                    H6: 'H6'
+                },
+                language: 'ua'
+            }).on('froalaEditor.image.error', function (e, ditor, error, response) {
+                if (error.code == 5) {
+                    alert("Розмір файлу не повинен бути більше 2 мб.");
+                }
+                return false;
+                })
+                .on('froalaEditor.image.uploaded', function (e, editor, response) {
+                    var data = JSON.parse(response);
+                    var $divImages = $("#divImages");
+                    var hidden = "<input type='hidden' id='DescriptionImages' " +
+                        "name = 'DescriptionImages' value = '" + data.filename + "'/>";
+                    $divImages.append(hidden);
+                    //console.log(data.filename);
+                    //console.log(response);
+                })
+                // Catch image remove
+                .on('froalaEditor.image.removed', function (e, editor, $img) {
+                    $.ajax({
+                        // Request method.
+                        method: "POST",
+
+                        // Request URL.
+                        url: "/Products/DeleteImageDecription",
+
+                        // Request params.
+                        data: {
+                            src: $img.attr('src')
+                        }
+                    }).done(function (data) {
+                        //var data = JSON.parse(response);
+                        $('#divImages :input[value="' + data.filename + '"]').remove();
+                        // console.log(data);
+                    });
+                });
+            $("#form").on("click", "#btn_product_add", function () {
+                var textHtml = $("#textEdit").froalaEditor("html.get");
+                $("#Description").val(textHtml);
+                //return false;
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.in").each(function () {
+                $(this).siblings(".panel-heading").find(".glyphicon").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hide.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            });
+        });
+    </script>
+    <script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/cropper/cropper.min.js"></script>
+    <script src="~/Scripts/product/cropper/work-cropper.js"></script>
+}
+
+
+
+
+
+

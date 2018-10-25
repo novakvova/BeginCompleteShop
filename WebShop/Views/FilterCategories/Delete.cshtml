@@ -1,0 +1,48 @@
+﻿@model WebShop.Models.Entities.FilterCategory
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>FilterCategory</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CategoryOf.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CategoryOf.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FilterNameOf.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FilterNameOf.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FilterValueOf.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FilterValueOf.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

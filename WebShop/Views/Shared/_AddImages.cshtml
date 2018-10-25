@@ -1,0 +1,35 @@
+﻿@{
+    string path = Url.Content(WebShop.Constants.ProductImagePath);
+}
+<h2>Завантаження фото!</h2>
+@*<input type="file" name="img_file" id="img_file" class="hide" />*@
+
+<div id="fileUploadContainer">
+
+</div>
+
+<div class="row">
+    <div id="listUploadImages">
+
+    </div>
+    <div class="col-md-2 plusupload" id="imageContainerPlus" data-counter="1">
+        <div class="thumbnail">
+            <img src="@(path+"_default.png")" class="uploadimage" alt="Lights" style="width:100%">
+        </div>
+    </div>
+
+</div>
+@using (Html.BeginForm("Add", "ProductImages", FormMethod.Post,
+    new { id = "__AjaxAntiForgeryForm", @class = "form-horizontal",
+        role = "form" }))
+{
+    @Html.Hidden("ImageBase64")
+    @Html.AntiForgeryToken()
+}
+
+@Html.Partial("_ImageCropper")
+@Html.Partial("_ProgressLoader")
+
+
+
+
