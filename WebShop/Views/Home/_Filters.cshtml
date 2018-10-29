@@ -4,19 +4,21 @@
 {
     foreach (var name in Model.Filters)
     {
-        <ul>
-            @name.Name
-            @foreach (var value in name.Children)
+            <h2>@name.Name</h2>
+            foreach (var value in name.Children)
             {
                 string isCheck = (Model.Check.SingleOrDefault(v => v == value.Id) != 0) ?
                     "checked" : "";
-                <li>
-                    <input type="checkbox" value="@value.Id" 
-                           id="fvalues" name="fvalues" @isCheck/>
-                    @value.Name
-                </li>
+          
+                <div class="checkbox checkbox-success checkbox-sm" style="margin-top:15px;">
+                    <input id="@value.Id" name="fvalues" class="styled" type="checkbox" value="@value.Id" @isCheck>
+                    <label for="@value.Id">
+                        <span style="font-size:14pt; margin-top: -10px; position: absolute;">@value.Name</span>
+                    </label>
+                </div>
+
+            
             }
-        </ul>
     }
     <input type="submit" class="form-control" value="Примінити фільтер" />
 }

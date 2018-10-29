@@ -53,6 +53,7 @@ namespace WebShop
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/font-awesome.css",
+                      "~/Content/awesome-bootstrap-checkbox.css",
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/Content/Accordeon").Include(
