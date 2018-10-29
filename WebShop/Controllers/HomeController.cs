@@ -30,8 +30,9 @@ namespace WebShop.Controllers
         //        return HttpContext.GetOwinContext().Get<ApplicationDbContext>();
         //    }
         //}
-        public ActionResult Index(string[] fvalues)
+        public ActionResult Index(string[] fvalues, int page=1)
         {
+           
             int[] listFilterId = new int[0];
             //int mycount = _userService.GetCountUsers();
             HomeViewModel model = new HomeViewModel();
@@ -40,7 +41,9 @@ namespace WebShop.Controllers
             model.Filter.Filters = GetListFilters();
             if (fvalues != null)
                 listFilterId = fvalues.Select(v => int.Parse(v)).ToArray();
-            model.Products = GetProductsByFilter(listFilterId, model.Filter.Filters);
+            model.Product = GetProductsByFilter(
+                listFilterId, 
+                model.Filter.Filters, page);
             model.Filter.Check = listFilterId;
             return View(model);
         }
@@ -77,11 +80,35 @@ namespace WebShop.Controllers
                                 select g.Key).ToList()
                 }).ToList();
 
-            
+            DisableFilterValues(ref listGroupFilters);
             return listGroupFilters;
         }
 
-        private List<ProductViewModel> GetProductsByFilter(int[] values, List<FNameViewModel> filtersList)
+        private void DisableFilterValues(ref List<FNameViewModel> filtersList)
+        {
+            for (int i = 0; i < filtersList.Count; i++)
+            {
+                for (int j = 0; j < filtersList[i].Children.Count; j++)
+                {
+                    var id = filtersList[i].Children[j].Id;
+                    int count = 0;
+                    if(id!=null)
+                    {
+                        count = _context.Filters
+                        .Where(f => f.FilterValueId == id)
+                        .Count();
+                    }
+                    
+                    if (count == 0)
+                        filtersList[i].Children[j].Disabled = true;
+                }
+            }
+        }
+
+        private HomeProductViewModel GetProductsByFilter(
+            int[] values, 
+            List<FNameViewModel> filtersList,
+            int page)
         {
             int[] filterValueSearchList = values;
             var query = _context
@@ -110,13 +137,28 @@ namespace WebShop.Controllers
                 if (count != 0)
                     query = query.Where(predicate);
             }
-            var listProductSearch = query.Select(p => new ProductViewModel
+            int pageSize = 2;
+            int pageNo = page - 1;
+            var listProductSearch = query
+                .OrderBy(p=>p.Id)
+                .Skip(pageNo*pageSize)
+                .Take(pageSize)
+                .Select(p => new ProductViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Price = p.Price
             }).ToList();
-            return listProductSearch;
+
+            int allCount = query.Count();
+            HomeProductViewModel model = new HomeProductViewModel
+            {
+                Products = listProductSearch,
+                CurrentPage = page,
+                TotalPage = (int)Math.Ceiling((double)allCount / pageSize)
+            };
+
+            return model;
         }
 
         public ActionResult About()

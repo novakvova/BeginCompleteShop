@@ -246,6 +246,7 @@
     </Compile>
     <Compile Include="HangfireAuthorizationFilter.cs" />
     <Compile Include="Healpers\ImageWorker.cs" />
+    <Compile Include="Healpers\PagingHelpers.cs" />
     <Compile Include="Healpers\PredicateBuilder.cs" />
     <Compile Include="Migrations\201808141611352_InitialCreate.cs" />
     <Compile Include="Migrations\201808141611352_InitialCreate.Designer.cs">
@@ -577,6 +578,7 @@
     <Content Include="Views\FilterCategories\CreateFilterName.cshtml" />
     <Content Include="Views\FilterCategories\CreateFilterValue.cshtml" />
     <Content Include="Views\Home\_Filters.cshtml" />
+    <Content Include="Views\Home\_Products.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

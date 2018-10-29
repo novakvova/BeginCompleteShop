@@ -5,19 +5,17 @@
     foreach (var name in Model.Filters)
     {
             <h2>@name.Name</h2>
-            foreach (var value in name.Children)
-            {
-                string isCheck = (Model.Check.SingleOrDefault(v => v == value.Id) != 0) ?
-                    "checked" : "";
-          
+        foreach (var value in name.Children)
+        {
+            string isCheck = (Model.Check.SingleOrDefault(v => v == value.Id) != 0) ?
+                "checked" : "";
+            string disabled = value.Disabled ? "disabled" : "";
                 <div class="checkbox checkbox-success checkbox-sm" style="margin-top:15px;">
-                    <input id="@value.Id" name="fvalues" class="styled" type="checkbox" value="@value.Id" @isCheck>
+                    <input id="@value.Id" name="fvalues" class="styled" type="checkbox" value="@value.Id" @isCheck @disabled>
                     <label for="@value.Id">
                         <span style="font-size:14pt; margin-top: -10px; position: absolute;">@value.Name</span>
                     </label>
-                </div>
-
-            
+                </div>            
             }
     }
     <input type="submit" class="form-control" value="Примінити фільтер" />

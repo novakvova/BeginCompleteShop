@@ -41,10 +41,17 @@ namespace WebShop.ViewModels
         public List<FNameViewModel> Filters { get; set; }
         public int[] Check { get; set; }
     }
+    public class HomeProductViewModel
+    {
+        public List<ProductViewModel> Products { get; set; }
+        public int TotalPage { get; set; }
+        public int CurrentPage { get; set; }
+    }
     public class HomeViewModel
     {
         public HomeFilterViewModel Filter { get; set; }
-        public List<ProductViewModel> Products { get; set; }
+        public HomeProductViewModel Product { get; set; }
+        
     }
 
 }

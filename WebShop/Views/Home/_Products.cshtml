@@ -1,0 +1,51 @@
+﻿@model WebShop.ViewModels.HomeViewModel
+@using WebShop.Healpers
+<div class="row">
+
+    @foreach (var p in Model.Product.Products)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img class="card-img-top img-responsive"
+                     src="http://www.mihanmedia.ir/userfile/736708307-580x567.jpg"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="#" class="text-dark">@p.Name</a>
+                    </h5>
+                </div>
+                <div class="card-footer">
+                    <div class="badge badge-danger float-right">30%</div>
+                    <div class="float-left">
+                        <a href="#" class="text-danger">@p.Price</a>
+                        <br>
+                        <small class="text-muted"><del>2000</del></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+@{
+    string linkFilter = "";
+    for (int i = 0; i < Model.Filter.Check.Length; i++)
+    {
+        if(i==0)
+        {
+            linkFilter += $"{Model.Filter.Check[i]}";
+        }
+        else
+        {
+            linkFilter += $"&fvalues={Model.Filter.Check[i]}";
+        }
+    }
+    string links = Html.PageLinks(Model.Product.CurrentPage, Model.Product.TotalPage,
+    x => Url.Action("Index", "Home", new
+    {
+        page=x,
+        fvalues = linkFilter
+    }));
+}
+
+@Html.Raw(links)

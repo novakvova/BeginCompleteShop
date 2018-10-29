@@ -15,5 +15,6 @@ namespace WebShop.Models.Entities
         [StringLength(maximumLength: 258)]
         [Display(Name = "FilterValue")]
         public string Name { get; set; }
+        public virtual ICollection<Filter> Filters { get; set; }
     }
 }
