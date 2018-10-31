@@ -80,9 +80,9 @@ namespace WebShop.Migrations
             Product[] products =
             {
                 new Product { Id=1, Name="Джинси", Price=240, Description="asdfasfd11111111", CategoryId=1 },
-                new Product { Id=2, Name="Брукі", Price=140, Description="asdfasfd1111111111", CategoryId=1 },
+                new Product { Id=2, Name="Бруки", Price=140, Description="asdfasfd1111111111", CategoryId=1 },
                 new Product { Id=3, Name="Труси", Price=40, Description="asdfasfd1111111", CategoryId=1 },
-                new Product { Id=4, Name="Майка", Price=20, Description="asdfasfd11111111", CategoryId=1 }
+                new Product { Id=4, Name="Майки", Price=20, Description="asdfasfd11111111", CategoryId=1 }
             };
             context.Products.AddOrUpdate(p => p.Id, products);
             #endregion

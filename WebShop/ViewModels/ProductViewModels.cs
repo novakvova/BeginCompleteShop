@@ -40,6 +40,7 @@ namespace WebShop.ViewModels
     {
         public List<FNameViewModel> Filters { get; set; }
         public int[] Check { get; set; }
+        public string SearchProduct { get; set; }
     }
     public class HomeProductViewModel
     {
@@ -49,6 +50,7 @@ namespace WebShop.ViewModels
     }
     public class HomeViewModel
     {
+        
         public HomeFilterViewModel Filter { get; set; }
         public HomeProductViewModel Product { get; set; }
         

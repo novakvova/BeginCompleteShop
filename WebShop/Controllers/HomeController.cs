@@ -30,21 +30,24 @@ namespace WebShop.Controllers
         //        return HttpContext.GetOwinContext().Get<ApplicationDbContext>();
         //    }
         //}
-        public ActionResult Index(string[] fvalues, int page=1)
+        public ActionResult Index(string[] fvalues, string SearchProduct, 
+            int page=1)
         {
            
             int[] listFilterId = new int[0];
             //int mycount = _userService.GetCountUsers();
             HomeViewModel model = new HomeViewModel();
             model.Filter = new HomeFilterViewModel();
+
             //Будую дерево фільтрів
             model.Filter.Filters = GetListFilters();
             if (fvalues != null)
                 listFilterId = fvalues.Select(v => int.Parse(v)).ToArray();
             model.Product = GetProductsByFilter(
                 listFilterId, 
-                model.Filter.Filters, page);
+                model.Filter.Filters, page, SearchProduct);
             model.Filter.Check = listFilterId;
+            model.Filter.SearchProduct = SearchProduct;
             return View(model);
         }
         private List<FNameViewModel> GetListFilters()
@@ -108,7 +111,7 @@ namespace WebShop.Controllers
         private HomeProductViewModel GetProductsByFilter(
             int[] values, 
             List<FNameViewModel> filtersList,
-            int page)
+            int page, string search)
         {
             int[] filterValueSearchList = values;
             var query = _context
@@ -137,8 +140,12 @@ namespace WebShop.Controllers
                 if (count != 0)
                     query = query.Where(predicate);
             }
-            int pageSize = 2;
+            int pageSize = 1;
             int pageNo = page - 1;
+            if(!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.Name.Contains(search));
+            }
             var listProductSearch = query
                 .OrderBy(p=>p.Id)
                 .Skip(pageNo*pageSize)

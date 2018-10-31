@@ -17,7 +17,8 @@ namespace WebShop.Healpers
             {
                 TagBuilder tagLI = new TagBuilder("li");
                 TagBuilder tag = new TagBuilder("a");// <a>
-                tag.MergeAttribute("href", pageUrl(i));
+                var url = HttpUtility.UrlDecode(pageUrl(i));
+                tag.MergeAttribute("href", url);
                 tag.InnerHtml = i.ToString();
                 if (i == currentPage)
                     tagLI.AddCssClass("active");
